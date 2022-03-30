@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.udc.tpcxhs;
+package es.udc.tpcx_hs.common;
 
 import java.io.*;
 import java.util.*;
@@ -29,9 +29,9 @@ import org.apache.hadoop.mapreduce.server.tasktracker.TTConfig;
 
 import com.google.common.base.Charsets;
 
-class HadoopHSScheduler {
+class HSScheduler {
     static String USE = "mapreduce.HSsort.use.hsscheduler";
-    private static final Log LOG = LogFactory.getLog(HadoopHSScheduler.class);
+    private static final Log LOG = LogFactory.getLog(HSScheduler.class);
     private Split[] splits;
     private List<Host> hosts = new ArrayList<Host>();
     private int slotsPerHost;
@@ -84,8 +84,8 @@ class HadoopHSScheduler {
         return result;
     }
 
-    public HadoopHSScheduler(String splitFilename,
-                             String nodeFilename) throws IOException {
+    public HSScheduler(String splitFilename,
+                       String nodeFilename) throws IOException {
         slotsPerHost = 4;
         // get the hosts
         Map<String, Host> hostIds = new HashMap<String,Host>();
@@ -110,8 +110,8 @@ class HadoopHSScheduler {
         }
     }
 
-    public HadoopHSScheduler(FileSplit[] realSplits,
-                             Configuration conf) throws IOException {
+    public HSScheduler(FileSplit[] realSplits,
+                       Configuration conf) throws IOException {
         this.realSplits = realSplits;
         this.slotsPerHost = conf.getInt(TTConfig.TT_MAP_SLOTS, 4);
         Map<String, Host> hostTable = new HashMap<String, Host>();
@@ -228,7 +228,7 @@ class HadoopHSScheduler {
     }
 
     public static void main(String[] args) throws IOException {
-        HadoopHSScheduler problem = new HadoopHSScheduler("block-loc.txt", "nodes");
+        HSScheduler problem = new HSScheduler("block-loc.txt", "nodes");
         for(Host host: problem.hosts) {
             System.out.println(host);
         }
