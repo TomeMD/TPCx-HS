@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.udc.tpcxhs;
+package es.udc.tpcx_hs.common;
 
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.udc.tpcx_hs.flink.HadoopHSScheduler;
+import es.udc.tpcx_hs.spark.HSSortConfigKeys;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -46,7 +48,7 @@ import org.apache.hadoop.util.StringUtils;
  * and the rest of the line as the value. Both key and value are represented
  * as Text.
  */
-public class HadoopHSInputFormat extends FileInputFormat<Text,Text> {
+public class HSInputFormat extends FileInputFormat<Text,Text> {
 
     static final String PARTITION_FILENAME = "_partition.lst";
     private static final String NUM_PARTITIONS =
@@ -58,6 +60,11 @@ public class HadoopHSInputFormat extends FileInputFormat<Text,Text> {
     static final int RECORD_LENGTH = KEY_LENGTH + VALUE_LENGTH;
     private static MRJobConfig lastContext = null;
     private static List<InputSplit> lastResult = null;
+    private boolean is_spark;
+
+    public HSInputFormat() {this.is_spark = false;}
+
+    public HSInputFormat(boolean is_spark) {this.is_spark = is_spark;}
 
     static class TextSampler implements IndexedSortable {
         private ArrayList<Text> records = new ArrayList<Text>();
@@ -119,14 +126,23 @@ public class HadoopHSInputFormat extends FileInputFormat<Text,Text> {
                                           Path partFile) throws Throwable  {
         long t1 = System.currentTimeMillis();
         Configuration conf = job.getConfiguration();
-        final HadoopHSInputFormat inFormat = new HadoopHSInputFormat();
+        final HSInputFormat inFormat = new HSInputFormat();
         final TextSampler sampler = new TextSampler();
         int partitions = job.getNumReduceTasks();
-        long sampleSize = conf.getLong(SAMPLE_SIZE, 100000);
+        long sampleSize = (is_spark) ?
+                conf.getLong(HSSortConfigKeys.SAMPLE_SIZE.key(),
+                        HSSortConfigKeys.DEFAULT_SAMPLE_SIZE)
+                :
+                conf.getLong(SAMPLE_SIZE, 100000);
         final List<InputSplit> splits = inFormat.getSplits(job);
         long t2 = System.currentTimeMillis();
         System.out.println("Computing input splits took " + (t2 - t1) + "ms");
-        int samples = Math.min(conf.getInt(NUM_PARTITIONS, 10), splits.size());
+        int samples = (is_spark) ?
+                Math.min(conf.getInt(HSSortConfigKeys.NUM_PARTITIONS.key(),
+                                HSSortConfigKeys.DEFAULT_NUM_PARTITIONS),
+                        splits.size())
+                :
+                Math.min(conf.getInt(NUM_PARTITIONS, 10), splits.size());
         System.out.println("Sampling " + samples + " splits of " + splits.size());
         final long recordsPerSample = sampleSize / samples;
         final int sampleStep = splits.size() / samples;
@@ -293,8 +309,8 @@ public class HadoopHSInputFormat extends FileInputFormat<Text,Text> {
         lastResult = super.getSplits(job);
         t2 = System.currentTimeMillis();
         System.out.println("Spent " + (t2 - t1) + "ms computing base-splits.");
-        if (job.getConfiguration().getBoolean(HadoopHSScheduler.USE, true)) {
-            HadoopHSScheduler scheduler = new HadoopHSScheduler(
+        if (job.getConfiguration().getBoolean(HSScheduler.USE, true)) {
+            HSScheduler scheduler = new HSScheduler(
                     lastResult.toArray(new FileSplit[0]), job.getConfiguration());
             lastResult = scheduler.getNewFileSplits();
             t3 = System.currentTimeMillis();
