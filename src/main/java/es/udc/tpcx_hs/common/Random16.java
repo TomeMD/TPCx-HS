@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.udc.tpcx_hs.datagen;
+package es.udc.tpcx_hs.common;
 
 /**
  * This class implements a 128-bit linear congruential generator.
