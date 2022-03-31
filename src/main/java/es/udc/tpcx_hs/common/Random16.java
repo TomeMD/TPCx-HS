@@ -42,7 +42,7 @@ package es.udc.tpcx_hs.common;
  * This is based on 1.0 of rand16.c from Chris Nyberg 
  * <chris.nyberg@ordinal.com>.
  */
-class Random16 {
+public class Random16 {
 
   /** 
    * The "Gen" array contain powers of 2 of the linear congruential generator.

@@ -27,7 +27,7 @@ import org.apache.hadoop.io.Writable;
  * An unsigned 16 byte integer class that supports addition, multiplication,
  * and left shifts.
  */
-class Unsigned16 implements Writable {
+public class Unsigned16 implements Writable {
   private long hi8;
   private long lo8;
 
