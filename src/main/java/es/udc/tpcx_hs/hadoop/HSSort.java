@@ -38,6 +38,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import es.udc.tpcx_hs.common.*;
+
 /**
  * Generates the sampled split points, launches the job, and waits for it to
  * finish. 
@@ -289,7 +291,7 @@ public class HSSort extends Configured implements Tool {
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(Text.class);
     job.setInputFormatClass(CommonHSInputFormat.class);
-    job.setOutputFormatClass(HSOutputFormat.class);
+    job.setOutputFormatClass(CommonHSOutputFormat.class);
     if (useSimplePartitioner) {
       job.setPartitionerClass(SimplePartitioner.class);
     } else {
@@ -311,7 +313,7 @@ public class HSSort extends Configured implements Tool {
     }
     
     job.getConfiguration().setInt("dfs.replication", 3);
-    HSOutputFormat.setFinalSync(job, true);
+    CommonHSOutputFormat.setFinalSync(job, true);
     int ret = job.waitForCompletion(true) ? 0 : 1;
     LOG.info("done");
     return ret;

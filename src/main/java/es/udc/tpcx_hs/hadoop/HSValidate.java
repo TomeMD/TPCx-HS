@@ -20,7 +20,6 @@ package es.udc.tpcx_hs.hadoop;
 import java.io.IOException;
 import java.util.zip.Checksum;
 
-import es.udc.tpcx_hs.datagen.Unsigned16;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -36,6 +35,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.PureJavaCrc32;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+
+import es.udc.tpcx_hs.common.*;
 
 /**
  * Generate 1 mapper per a file that checks to make sure the keys

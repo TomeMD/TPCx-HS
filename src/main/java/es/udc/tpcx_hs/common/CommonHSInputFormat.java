@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.udc.tpcx_hs.flink.HadoopHSScheduler;
-import es.udc.tpcx_hs.spark.HSSortConfigKeys;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -50,21 +48,16 @@ import org.apache.hadoop.util.StringUtils;
  */
 public class CommonHSInputFormat extends FileInputFormat<Text,Text> {
 
-    static final String PARTITION_FILENAME = "_partition.lst";
+    public static final String PARTITION_FILENAME = "_partition.lst";
     private static final String NUM_PARTITIONS =
             "mapreduce.hssort.num.partitions";
     private static final String SAMPLE_SIZE =
             "mapreduce.hssort.partitions.sample";
-    static final int KEY_LENGTH = 10;
-    static final int VALUE_LENGTH = 90;
+    public static final int KEY_LENGTH = 10;
+    public static final int VALUE_LENGTH = 90;
     static final int RECORD_LENGTH = KEY_LENGTH + VALUE_LENGTH;
     private static MRJobConfig lastContext = null;
     private static List<InputSplit> lastResult = null;
-    private boolean is_spark;
-
-    public CommonHSInputFormat() {this.is_spark = false;}
-
-    public CommonHSInputFormat(boolean is_spark) {this.is_spark = is_spark;}
 
     static class TextSampler implements IndexedSortable {
         private ArrayList<Text> records = new ArrayList<Text>();
@@ -129,20 +122,17 @@ public class CommonHSInputFormat extends FileInputFormat<Text,Text> {
         final CommonHSInputFormat inFormat = new CommonHSInputFormat();
         final TextSampler sampler = new TextSampler();
         int partitions = job.getNumReduceTasks();
-        long sampleSize = (is_spark) ?
-                conf.getLong(HSSortConfigKeys.SAMPLE_SIZE.key(),
-                        HSSortConfigKeys.DEFAULT_SAMPLE_SIZE)
-                :
-                conf.getLong(SAMPLE_SIZE, 100000);
+        long sampleSize = conf.getLong(SAMPLE_SIZE, 100000);
+        //conf.getLong(HSSortConfigKeys.SAMPLE_SIZE.key(),
+        //      HSSortConfigKeys.DEFAULT_SAMPLE_SIZE)
         final List<InputSplit> splits = inFormat.getSplits(job);
         long t2 = System.currentTimeMillis();
         System.out.println("Computing input splits took " + (t2 - t1) + "ms");
-        int samples = (is_spark) ?
-                Math.min(conf.getInt(HSSortConfigKeys.NUM_PARTITIONS.key(),
-                                HSSortConfigKeys.DEFAULT_NUM_PARTITIONS),
-                        splits.size())
-                :
-                Math.min(conf.getInt(NUM_PARTITIONS, 10), splits.size());
+        int samples = Math.min(conf.getInt(NUM_PARTITIONS, 10), splits.size());
+        //Math.min(conf.getInt(HSSortConfigKeys.NUM_PARTITIONS.key(),
+        // HSSortConfigKeys.DEFAULT_NUM_PARTITIONS),
+        // splits.size())
+
         System.out.println("Sampling " + samples + " splits of " + splits.size());
         final long recordsPerSample = sampleSize / samples;
         final int sampleStep = splits.size() / samples;

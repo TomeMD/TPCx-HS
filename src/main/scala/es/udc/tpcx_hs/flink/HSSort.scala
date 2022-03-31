@@ -5,13 +5,10 @@ import es.udc.tpcx_hs.common.{CommonHSInputFormat, CommonHSOutputFormat}
 import org.apache.flink.api.common.operators.Order
 import org.apache.flink.api.scala._
 import org.apache.flink.api.scala.hadoop.mapreduce.HadoopOutputFormat
-import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
-import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
-import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
 
 
 object HSSort extends java.io.Serializable {

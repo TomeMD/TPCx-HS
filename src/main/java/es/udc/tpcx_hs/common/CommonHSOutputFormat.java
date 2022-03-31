@@ -19,9 +19,9 @@ package es.udc.tpcx_hs.common;
 
 import java.io.IOException;
 
-import es.udc.tpcx_hs.spark.HSSortConfigKeys;
-import es.udc.tpcx_hs.spark.HadoopHSInputFormat;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -40,31 +40,23 @@ import org.apache.hadoop.mapreduce.security.TokenCache;
 public class CommonHSOutputFormat extends FileOutputFormat<Text,Text> {
     static final String FINAL_SYNC_ATTRIBUTE = "mapreduce.hssort.final.sync";
     private OutputCommitter committer = null;
-    private boolean is_spark;
-
-    public CommonHSOutputFormat() {this.is_spark = false;}
-
-    public CommonHSOutputFormat(boolean is_spark) {this.is_spark = is_spark;}
 
     /**
      * Set the requirement for a final sync before the stream is closed.
      */
-    static void setFinalSync(JobContext job, boolean newValue) {
-        if (is_spark)
-            job.getConfiguration().setBoolean(HSSortConfigKeys.FINAL_SYNC_ATTRIBUTE.key(), newValue);
-        else
-            job.getConfiguration().setBoolean(FINAL_SYNC_ATTRIBUTE, newValue);
+    public static void setFinalSync(JobContext job, boolean newValue) {
+        job.getConfiguration().setBoolean(FINAL_SYNC_ATTRIBUTE, newValue);
+        //job.getConfiguration().setBoolean(HSSortConfigKeys.FINAL_SYNC_ATTRIBUTE.key(), newValue);
     }
 
     /**
      * Does the user want a final sync at close?
      */
     public static boolean getFinalSync(JobContext job) {
-        if (is_spark)
-            return job.getConfiguration().getBoolean(
-                    HSSortConfigKeys.FINAL_SYNC_ATTRIBUTE.key(),
-                    HSSortConfigKeys.DEFAULT_FINAL_SYNC_ATTRIBUTE);
         return job.getConfiguration().getBoolean(FINAL_SYNC_ATTRIBUTE, false);
+        // return job.getConfiguration().getBoolean(
+        //                    HSSortConfigKeys.FINAL_SYNC_ATTRIBUTE.key(),
+        //                    HSSortConfigKeys.DEFAULT_FINAL_SYNC_ATTRIBUTE);
     }
 
     static class TeraRecordWriter extends RecordWriter<Text,Text> {
@@ -106,7 +98,9 @@ public class CommonHSOutputFormat extends FileOutputFormat<Text,Text> {
         TokenCache.obtainTokensForNamenodes(job.getCredentials(),
                 new Path[] { outDir }, jobConf);
 
-        if (is_spark && fs.exists(outDir)) {
+        final FileSystem fs = outDir.getFileSystem(jobConf);
+
+        if (fs.exists(outDir)) {
             // existing output dir is considered empty iff its only content is the
             // partition file.
             //
@@ -116,7 +110,7 @@ public class CommonHSOutputFormat extends FileOutputFormat<Text,Text> {
                 final FileStatus st = outDirKids[0];
                 final String fname = st.getPath().getName();
                 empty =
-                        !st.isDirectory() && HadoopHSInputFormat.PARTITION_FILENAME.equals(fname);
+                        !st.isDirectory() && CommonHSInputFormat.PARTITION_FILENAME.equals(fname);
             }
             //if (TeraSort.getUseSimplePartitioner(job) || !empty) {
             //  throw new FileAlreadyExistsException("Output directory " + outDir

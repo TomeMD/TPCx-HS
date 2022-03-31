@@ -24,6 +24,7 @@ import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
 import scala.collection._
 import scala.collection.mutable.ListBuffer
 
+import es.udc.tpcx_hs.common._
 /**
  * An application that reads sorted data according to the terasort spec and
  * reports if it's indeed sorted.

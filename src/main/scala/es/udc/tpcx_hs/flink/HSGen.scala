@@ -16,12 +16,14 @@
  */
 package es.udc.tpcx_hs.flink
 
+
 import org.apache.flink.api.scala._
 import org.apache.flink.api.scala.hadoop.mapreduce.HadoopOutputFormat
 import org.apache.flink.util.Collector
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
 
+import es.udc.tpcx_hs.common._
 
 object HSGen {
   def main(args: Array[String]) {
