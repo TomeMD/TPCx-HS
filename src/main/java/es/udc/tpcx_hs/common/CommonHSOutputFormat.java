@@ -37,14 +37,14 @@ import org.apache.hadoop.mapreduce.security.TokenCache;
 /**
  * An output format that writes the key and value appended together.
  */
-public class HSOutputFormat extends FileOutputFormat<Text,Text> {
+public class CommonHSOutputFormat extends FileOutputFormat<Text,Text> {
     static final String FINAL_SYNC_ATTRIBUTE = "mapreduce.hssort.final.sync";
     private OutputCommitter committer = null;
     private boolean is_spark;
 
-    public HSOutputFormat() {this.is_spark = false;}
+    public CommonHSOutputFormat() {this.is_spark = false;}
 
-    public HSOutputFormat(boolean is_spark) {this.is_spark = is_spark;}
+    public CommonHSOutputFormat(boolean is_spark) {this.is_spark = is_spark;}
 
     /**
      * Set the requirement for a final sync before the stream is closed.

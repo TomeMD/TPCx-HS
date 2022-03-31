@@ -48,7 +48,7 @@ import org.apache.hadoop.util.StringUtils;
  * and the rest of the line as the value. Both key and value are represented
  * as Text.
  */
-public class HSInputFormat extends FileInputFormat<Text,Text> {
+public class CommonHSInputFormat extends FileInputFormat<Text,Text> {
 
     static final String PARTITION_FILENAME = "_partition.lst";
     private static final String NUM_PARTITIONS =
@@ -62,9 +62,9 @@ public class HSInputFormat extends FileInputFormat<Text,Text> {
     private static List<InputSplit> lastResult = null;
     private boolean is_spark;
 
-    public HSInputFormat() {this.is_spark = false;}
+    public CommonHSInputFormat() {this.is_spark = false;}
 
-    public HSInputFormat(boolean is_spark) {this.is_spark = is_spark;}
+    public CommonHSInputFormat(boolean is_spark) {this.is_spark = is_spark;}
 
     static class TextSampler implements IndexedSortable {
         private ArrayList<Text> records = new ArrayList<Text>();
@@ -126,7 +126,7 @@ public class HSInputFormat extends FileInputFormat<Text,Text> {
                                           Path partFile) throws Throwable  {
         long t1 = System.currentTimeMillis();
         Configuration conf = job.getConfiguration();
-        final HSInputFormat inFormat = new HSInputFormat();
+        final CommonHSInputFormat inFormat = new CommonHSInputFormat();
         final TextSampler sampler = new TextSampler();
         int partitions = job.getNumReduceTasks();
         long sampleSize = (is_spark) ?
