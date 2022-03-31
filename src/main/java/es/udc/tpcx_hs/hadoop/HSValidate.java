@@ -20,7 +20,6 @@ package es.udc.tpcx_hs.hadoop;
 import java.io.IOException;
 import java.util.zip.Checksum;
 
-import es.udc.tpcx_hs.datagen.HSInputFormat;
 import es.udc.tpcx_hs.datagen.Unsigned16;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -163,7 +162,7 @@ public class HSValidate extends Configured implements Tool {
       usage();
       return 1;
     }
-    HSInputFormat.setInputPaths(job, new Path(args[0]));
+    CommonHSInputFormat.setInputPaths(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
     job.setJobName("HSValidate");
     job.setJarByClass(HSValidate.class);
@@ -175,7 +174,7 @@ public class HSValidate extends Configured implements Tool {
     job.setNumReduceTasks(1);
     // force a single split 
     FileInputFormat.setMinInputSplitSize(job, Long.MAX_VALUE);
-    job.setInputFormatClass(HSInputFormat.class);
+    job.setInputFormatClass(CommonHSInputFormat.class);
     return job.waitForCompletion(true) ? 0 : 1;
   }
 

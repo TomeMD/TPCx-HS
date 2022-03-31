@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Checksum;
 
+import es.udc.tpcx_hs.common.CommonHSInputFormat;
+import es.udc.tpcx_hs.common.CommonHSOutputFormat;
 import es.udc.tpcx_hs.common.Random16;
 import es.udc.tpcx_hs.common.Unsigned16;
 import es.udc.tpcx_hs.hadoop.HSSort;
@@ -215,8 +217,8 @@ public class HSGen extends Configured implements Tool {
     private Checksum crc32 = new PureJavaCrc32();
     private Unsigned16 total = new Unsigned16();
     private static final Unsigned16 ONE = new Unsigned16(1);
-    private byte[] buffer = new byte[HSInputFormat.KEY_LENGTH +
-                                     HSInputFormat.VALUE_LENGTH];
+    private byte[] buffer = new byte[CommonHSInputFormat.KEY_LENGTH +
+                                     CommonHSInputFormat.VALUE_LENGTH];
     private Counter checksumCounter;
 
     public void map(LongWritable row, NullWritable ignored,
@@ -228,13 +230,13 @@ public class HSGen extends Configured implements Tool {
       }
       Random16.nextRand(rand);
       GenSort.generateRecord(buffer, rand, rowId);
-      key.set(buffer, 0, HSInputFormat.KEY_LENGTH);
-      value.set(buffer, HSInputFormat.KEY_LENGTH, 
-                HSInputFormat.VALUE_LENGTH);
+      key.set(buffer, 0, CommonHSInputFormat.KEY_LENGTH);
+      value.set(buffer, CommonHSInputFormat.KEY_LENGTH,
+                CommonHSInputFormat.VALUE_LENGTH);
       context.write(key, value);
       crc32.reset();
       crc32.update(buffer, 0, 
-                   HSInputFormat.KEY_LENGTH + HSInputFormat.VALUE_LENGTH);
+                   CommonHSInputFormat.KEY_LENGTH + CommonHSInputFormat.VALUE_LENGTH);
       checksum.set(crc32.getValue());
       total.add(checksum);
       rowId.add(ONE);
@@ -305,7 +307,7 @@ public class HSGen extends Configured implements Tool {
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(Text.class);
     job.setInputFormatClass(RangeInputFormat.class);
-    job.setOutputFormatClass(HSOutputFormat.class);
+    job.setOutputFormatClass(CommonHSOutputFormat.class);
     return job.waitForCompletion(true) ? 0 : 1;
   }
 

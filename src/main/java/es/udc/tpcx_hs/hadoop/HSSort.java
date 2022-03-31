@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
 
-import es.udc.tpcx_hs.datagen.HSInputFormat;
-import es.udc.tpcx_hs.datagen.HSOutputFormat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configurable;
@@ -210,7 +208,7 @@ public class HSSort extends Configured implements Tool {
       try {
         FileSystem fs = FileSystem.getLocal(conf);
         this.conf = conf;
-        Path partFile = new Path(HSInputFormat.PARTITION_FILENAME);
+        Path partFile = new Path(CommonHSInputFormat.PARTITION_FILENAME);
         splitPoints = readPartitions(fs, partFile, conf);
         trie = buildTrie(splitPoints, 0, splitPoints.length, new Text(), 2);
       } catch (IOException ie) {
@@ -284,24 +282,24 @@ public class HSSort extends Configured implements Tool {
     Path inputDir = new Path(args[0]);
     Path outputDir = new Path(args[1]);
     boolean useSimplePartitioner = getUseSimplePartitioner(job);
-    HSInputFormat.setInputPaths(job, inputDir);
+    CommonHSInputFormat.setInputPaths(job, inputDir);
     FileOutputFormat.setOutputPath(job, outputDir);
     job.setJobName("HSSort");
     job.setJarByClass(HSSort.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(Text.class);
-    job.setInputFormatClass(HSInputFormat.class);
+    job.setInputFormatClass(CommonHSInputFormat.class);
     job.setOutputFormatClass(HSOutputFormat.class);
     if (useSimplePartitioner) {
       job.setPartitionerClass(SimplePartitioner.class);
     } else {
       long start = System.currentTimeMillis();
       Path partitionFile = new Path(outputDir, 
-                                    HSInputFormat.PARTITION_FILENAME);
+                                    CommonHSInputFormat.PARTITION_FILENAME);
       URI partitionUri = new URI(partitionFile.toString() +
-                                 "#" + HSInputFormat.PARTITION_FILENAME);
+                                 "#" + CommonHSInputFormat.PARTITION_FILENAME);
       try {
-        HSInputFormat.writePartitionFile(job, partitionFile);
+        CommonHSInputFormat.writePartitionFile(job, partitionFile);
       } catch (Throwable e) {
         LOG.error(e.getMessage());
         return -1;
