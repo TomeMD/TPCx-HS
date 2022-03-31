@@ -41,7 +41,7 @@ public class HSDataCheck {
 		            System.out.println("File does not exists : " + hdfsPath);
 		        } else {
 			        System.out.println("\nFile: " + hdfsPath);
-			        if(fs.getFileStatus(hdfsfilePath).isDir()) {
+			        if(fs.getFileStatus(hdfsfilePath).isDirectory()) {
 					    FileStatus[] status = fs.listStatus(hdfsfilePath);
                         for(int i=0;i<status.length;i++) {
                             System.out.print(status[i].getPath() + "  - Length: ");
