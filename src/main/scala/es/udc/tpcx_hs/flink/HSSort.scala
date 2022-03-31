@@ -1,6 +1,7 @@
-package es.udc.tpcxhs
+package es.udc.tpcx_hs.flink
 
 import com.google.common.primitives.UnsignedBytes
+import es.udc.tpcx_hs.common.{CommonHSInputFormat, CommonHSOutputFormat}
 import org.apache.flink.api.common.operators.Order
 import org.apache.flink.api.scala._
 import org.apache.flink.api.scala.hadoop.mapreduce.HadoopOutputFormat
@@ -43,10 +44,10 @@ object HSSort extends java.io.Serializable {
 
     // Configure execution environment and execute
     env
-      .createInput(HadoopInputs.readHadoopFile(new HadoopHSInputFormat(), classOf[Text], classOf[Text], inputPath))
+      .createInput(HadoopInputs.readHadoopFile(new CommonHSInputFormat(), classOf[Text], classOf[Text], inputPath))
       .partitionCustom(new HSSortPartitioner(partitions), 0)
       .sortPartition(0, Order.ASCENDING)
-      .output(new HadoopOutputFormat[Text, Text](new HadoopHSOutputFormat(), jobContext))
+      .output(new HadoopOutputFormat[Text, Text](new CommonHSOutputFormat(), jobContext))
 
     env.execute("HSSort")
   }

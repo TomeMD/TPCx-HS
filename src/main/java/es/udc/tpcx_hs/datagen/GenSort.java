@@ -24,6 +24,8 @@ import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.zip.Checksum;
 
+import es.udc.tpcx_hs.common.Random16;
+import es.udc.tpcx_hs.common.Unsigned16;
 import org.apache.hadoop.util.PureJavaCrc32;
 
 /** 
@@ -36,7 +38,7 @@ public class GenSort {
    * Generate a "binary" record suitable for all sort benchmarks *except* 
    * PennySort.
    */
-  static void generateRecord(byte[] recBuf, Unsigned16 rand, 
+  static void generateRecord(byte[] recBuf, Unsigned16 rand,
                                      Unsigned16 recordNumber) {
     /* generate the 10-byte key using the high 10 bytes of the 128-bit
      * random number

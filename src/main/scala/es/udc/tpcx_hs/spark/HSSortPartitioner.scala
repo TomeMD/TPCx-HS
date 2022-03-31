@@ -20,7 +20,7 @@
  * Partitioner for terasort. It uses the first seven bytes of the byte array to partition
  * the key space evenly.
  */
-
+package es.udc.tpcx_hs.spark
 
 import org.apache.hadoop.io.Text
 import com.google.common.primitives.Longs

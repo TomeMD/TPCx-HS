@@ -19,7 +19,7 @@
 /**
  * This file is copied from Hadoop package org.apache.hadoop.examples.terasort.
  */
-package es.udc.tpcxhs
+package es.udc.tpcx_hs.flink
 
 import java.io.IOException;
 

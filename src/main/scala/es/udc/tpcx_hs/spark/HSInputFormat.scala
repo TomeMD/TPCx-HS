@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package es.udc.tpcx_hs.spark
 
 import scala.collection.JavaConversions._
 import scala.util.control.Breaks._

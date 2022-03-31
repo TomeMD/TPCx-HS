@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package es.udc.tpcx_hs.spark
 
 import com.google.common.primitives.UnsignedBytes
+import es.udc.tpcx_hs.common.{CommonHSInputFormat, CommonHSOutputFormat}
 //import org.apache.hadoop.examples.terasort.{TeraInputFormat, TeraOutputFormat}
 
 import org.apache.hadoop.io.Text
@@ -56,14 +58,14 @@ object HSSort {
 
       // Read and Sort and Write to a new file
       val data = sc.newAPIHadoopFile(inputFile,
-        classOf[HadoopHSInputFormat],
+        classOf[CommonHSInputFormat],
         classOf[Text],
         classOf[Text])
       data.partitionBy(new HSSortPartitioner(data.partitions.size))
         .mapPartitions(iter => {
           iter.toVector.sortBy(kv => kv._1.getBytes).iterator
         })
-        .saveAsNewAPIHadoopFile[HadoopHSOutputFormat](outputFile)
+        .saveAsNewAPIHadoopFile[CommonHSOutputFormat](outputFile)
     }catch{
       case e: Exception => println("Spark HSSort Exception" + e.getMessage() + e.printStackTrace())
     }finally {

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+package es.udc.tpcx_hs.spark
 
 import com.google.common.primitives.UnsignedBytes
 import org.apache.hadoop.util.PureJavaCrc32

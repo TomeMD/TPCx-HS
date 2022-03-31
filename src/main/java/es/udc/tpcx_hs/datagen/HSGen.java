@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Checksum;
 
+import es.udc.tpcx_hs.common.Random16;
+import es.udc.tpcx_hs.common.Unsigned16;
 import es.udc.tpcx_hs.hadoop.HSSort;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
