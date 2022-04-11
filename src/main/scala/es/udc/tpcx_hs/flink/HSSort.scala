@@ -1,15 +1,17 @@
 package es.udc.tpcx_hs.flink
 
+import es.udc.tpcx_hs.common._
+
 import com.google.common.primitives.UnsignedBytes
-import es.udc.tpcx_hs.common.{CommonHSInputFormat, CommonHSOutputFormat}
+
 import org.apache.flink.api.common.operators.Order
 import org.apache.flink.api.scala._
 import org.apache.flink.api.scala.hadoop.mapreduce.HadoopOutputFormat
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
+
 import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
-
 
 object HSSort extends java.io.Serializable {
 

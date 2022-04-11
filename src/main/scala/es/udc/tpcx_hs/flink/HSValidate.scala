@@ -16,15 +16,16 @@
  */
 package es.udc.tpcx_hs.flink
 
+import es.udc.tpcx_hs.common._
+
 import com.google.common.primitives.UnsignedBytes
+
 import org.apache.hadoop.util.PureJavaCrc32
 import org.apache.flink.api.scala._
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
 
 import scala.collection._
 import scala.collection.mutable.ListBuffer
-
-import es.udc.tpcx_hs.common._
 /**
  * An application that reads sorted data according to the terasort spec and
  * reports if it's indeed sorted.

@@ -14,45 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.udc.tpcx_hs.spark
-
-import scala.collection.JavaConversions._
-import scala.util.control.Breaks._
-
-import java.io.EOFException
-import java.io.IOException
-import java.util.ArrayList
-import java.util.List
+package es.udc.tpcx_hs.common
 
 import com.google.common.primitives.UnsignedBytes
-import org.apache.hadoop.fs.FSDataInputStream
-import org.apache.hadoop.fs.BlockLocation
-import org.apache.hadoop.fs.FileSystem
-import org.apache.hadoop.fs.FileStatus
-import org.apache.hadoop.fs.LocatedFileStatus
-import org.apache.hadoop.fs.Path
-import org.apache.hadoop.mapreduce.InputSplit
-import org.apache.hadoop.mapreduce.JobContext
-import org.apache.hadoop.mapreduce.RecordReader
-import org.apache.hadoop.mapreduce.TaskAttemptContext
-import org.apache.hadoop.mapreduce.TaskAttemptContext
-import org.apache.hadoop.mapreduce.TaskAttemptID
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
-import org.apache.hadoop.mapreduce.lib.input.FileSplit
-import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl
-import org.apache.hadoop.util.IndexedSortable
-import org.apache.hadoop.util.QuickSort
-import org.apache.hadoop.util.StringUtils
+import org.apache.hadoop.fs.{FSDataInputStream, FileStatus, FileSystem, Path}
+import org.apache.hadoop.mapreduce.{InputSplit, JobContext, RecordReader, TaskAttemptContext}
+import org.apache.hadoop.mapreduce.lib.input.{FileInputFormat, FileSplit}
 
-import com.google.common.base.Stopwatch
+import java.io.EOFException
+import java.util.List
+import scala.collection.JavaConversions._
 
 object HSInputFormat {
-   val KEY_LEN = 10
-   val VALUE_LEN = 90
-   val RECORD_LEN = KEY_LEN + VALUE_LEN
-   var lastContext : JobContext = null
-   var lastResult : List[InputSplit] = null
-   implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
+  val KEY_LEN = 10
+  val VALUE_LEN = 90
+  val RECORD_LEN = KEY_LEN + VALUE_LEN
+  var lastContext : JobContext = null
+  var lastResult : List[InputSplit] = null
+  implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
 }
 
 class HSInputFormat extends FileInputFormat[Array[Byte], Array[Byte]] {
@@ -63,8 +42,8 @@ class HSInputFormat extends FileInputFormat[Array[Byte], Array[Byte]] {
   // Sort the file pieces since order matters.
   override def listStatus(job: JobContext): List[FileStatus] = {
     val listing = super.listStatus(job)
-    val sortedListing= listing.sortWith{ (lhs, rhs) => { 
-      lhs.getPath().compareTo(rhs.getPath()) < 0 
+    val sortedListing= listing.sortWith{ (lhs, rhs) => {
+      lhs.getPath().compareTo(rhs.getPath()) < 0
     } }
     sortedListing.toList
   }

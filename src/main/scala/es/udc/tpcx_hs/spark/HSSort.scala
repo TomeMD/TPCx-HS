@@ -16,9 +16,9 @@
  */
 package es.udc.tpcx_hs.spark
 
+import es.udc.tpcx_hs.common._
+
 import com.google.common.primitives.UnsignedBytes
-import es.udc.tpcx_hs.common.{CommonHSInputFormat, CommonHSOutputFormat}
-//import org.apache.hadoop.examples.terasort.{TeraInputFormat, TeraOutputFormat}
 
 import org.apache.hadoop.io.Text
 import org.apache.spark.{SparkConf, SparkContext}

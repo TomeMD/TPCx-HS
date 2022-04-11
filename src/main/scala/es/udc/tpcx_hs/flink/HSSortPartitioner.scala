@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-
 /**
  * Partitioner for terasort. It uses the first seven bytes of the byte array to partition
  * the key space evenly.
  */
 package es.udc.tpcx_hs.flink
 
-import org.apache.hadoop.io.Text
 import com.google.common.primitives.Longs
+
+import org.apache.hadoop.io.Text
 import org.apache.flink.api.common.functions.Partitioner
 
 case class HSSortPartitioner(numPartitions: Int) extends Partitioner[Text] {

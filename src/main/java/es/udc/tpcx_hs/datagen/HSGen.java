@@ -31,6 +31,7 @@ import es.udc.tpcx_hs.common.CommonHSOutputFormat;
 import es.udc.tpcx_hs.common.Random16;
 import es.udc.tpcx_hs.common.Unsigned16;
 import es.udc.tpcx_hs.hadoop.HSSort;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -41,7 +42,6 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
-import org.apache.hadoop.mapreduce.Cluster;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.InputSplit;

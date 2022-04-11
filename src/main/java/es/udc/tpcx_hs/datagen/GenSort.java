@@ -26,6 +26,7 @@ import java.util.zip.Checksum;
 
 import es.udc.tpcx_hs.common.Random16;
 import es.udc.tpcx_hs.common.Unsigned16;
+
 import org.apache.hadoop.util.PureJavaCrc32;
 
 /** 

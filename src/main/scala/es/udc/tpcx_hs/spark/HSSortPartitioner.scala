@@ -22,8 +22,8 @@
  */
 package es.udc.tpcx_hs.spark
 
-import org.apache.hadoop.io.Text
 import com.google.common.primitives.Longs
+import org.apache.hadoop.io.Text
 import org.apache.spark.Partitioner
 
 case class HSSortPartitioner(numPartitions: Int) extends Partitioner {
