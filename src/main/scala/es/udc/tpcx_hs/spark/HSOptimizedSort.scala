@@ -24,7 +24,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
  * Created by cnarasim on 1/18/17.
  */
-object HSSortOptimized {
+object HSOptimizedSort {
 
   implicit val caseInsensitiveOrdering = UnsignedBytes.lexicographicalComparator
 
