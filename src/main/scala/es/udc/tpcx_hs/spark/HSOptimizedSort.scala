@@ -33,19 +33,19 @@ object HSOptimizedSort {
     if (args.length < 2) {
       println("Usage:")
       println("DRIVER_MEMORY=[mem] spark-submit " +
-        "HSSort " +
+        "HSOptimizedSort " +
         "TPCx-HS-master_Spark.jar " +
         "[input-sort-directory] [output-sort-directory]")
       println(" ")
       println("Example:")
       println("DRIVER_MEMORY=50g spark-submit " +
-        "HSSort " +
+        "HSOptimizedSort " +
         "TPCx-HS-master_Spark.jar " +
         " hdfs://username/HSsort_input hdfs://username/HSsort_output")
       System.exit(0)
     }
-    val conf = new SparkConf().setAppName("HSSort").
-      registerKryoClasses(Array(classOf[Text])).setAppName("HSSort")
+    val conf = new SparkConf().setAppName("HSOptimizedSort").
+      registerKryoClasses(Array(classOf[Text])).setAppName("HSOptimizedSort")
 
     val sc = new SparkContext(conf)
     try {
@@ -61,12 +61,12 @@ object HSOptimizedSort {
         classOf[Text]).map{case (k,v)=>(k.getBytes, v.getBytes)}
 
       data
-        .repartitionAndSortWithinPartitions(new HSSortPartitioner(data.partitions.size))
+        .repartitionAndSortWithinPartitions(new HSOptimizedSortPartitioner(data.partitions.size))
         .map{case (k, v)=>(new Text(k), new Text(v))}
         .saveAsNewAPIHadoopFile[CommonHSOutputFormat](outputFile)
 
     } catch {
-      case e: Exception => println("Spark HSSort Exception" + e.getMessage() + e.printStackTrace())
+      case e: Exception => println("Spark HSOptimizedSort Exception" + e.getMessage() + e.printStackTrace())
     } finally {
       sc.stop()
     }
