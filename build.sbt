@@ -1,4 +1,4 @@
-name := "TPCx-HS"
+name := "tpcx-hs"
 version := "1.0"
 val hadoopVersion = "3.3.2"
 val sparkVersion = "3.2.1"
@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core"% sparkVersion % "provided",
   "org.apache.flink" %% "flink-streaming-scala" % flinkVersion % "provided",
   "org.apache.flink" %% "flink-hadoop-compatibility" % flinkVersion % "provided",
+  "com.google.guava" % "guava" % "31.1-jre",
 )
 
 assemblyShadeRules in assembly := Seq(
